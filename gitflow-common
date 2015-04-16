@@ -9,7 +9,7 @@
 #    http://github.com/petervanderdoes/gitflow
 #
 # Authors:
-# Copyright 2012-2014 Peter van der Does. All rights reserved.
+# Copyright 2012-2015 Peter van der Does. All rights reserved.
 #
 # Original Author:
 # Copyright 2010 Vincent Driessen. All rights reserved.
@@ -114,14 +114,14 @@ check_boolean() {
 # Git specific common functionality
 #
 
-git_local_branches() { git for-each-ref --format='%(refname:short)' refs/heads; }
-git_remote_branches() { git for-each-ref --format='%(refname:short)' refs/remotes; }
-git_all_branches() { git for-each-ref --format='%(refname:short)' refs/remotes refs/heads; }
+git_local_branches() { git for-each-ref --sort refname --format='%(refname:short)' refs/heads; }
+git_remote_branches() { git for-each-ref --sort refname --format='%(refname:short)' refs/remotes; }
+git_all_branches() { git for-each-ref --sort refname --format='%(refname:short)' refs/remotes refs/heads; }
 git_all_tags() { git for-each-ref --format='%(refname:short)' refs/tags; }
 
 git_local_branches_prefixed() {
 	[ -z $1 ] && die "Prefix parameter missing." # This should never happen.
-	git for-each-ref --format='%(refname:short)' refs/heads/$1 ;
+	git for-each-ref --format='%(refname:short)' refs/heads/$1\* ;
 }
 
 git_current_branch() {
@@ -298,7 +298,7 @@ gitflow_is_initialized() {
 gitflow_load_settings() {
 	export GIT_CURRENT_REPO_DIR="$(git rev-parse --show-toplevel 2>/dev/null)"
 	DOT_GIT_DIR=$(git rev-parse --git-dir)
-	export DOT_GIT_DIR=$(cd "$DOT_GIT_DIR" && pwd)
+	export DOT_GIT_DIR=$(cd "$DOT_GIT_DIR" >/dev/null 2>&1 && pwd)
 	export HOOKS_DIR=$(git config --get gitflow.path.hooks || echo "$DOT_GIT_DIR"/hooks) # the second option is used to support previous versions of git-flow
 	export MASTER_BRANCH=$(git config --get gitflow.branch.master)
 	export DEVELOP_BRANCH=$(git config --get gitflow.branch.develop)
@@ -712,8 +712,8 @@ run_pre_hook() {
 
 	scriptfile="${HOOKS_DIR}/pre-flow-${SUBCOMMAND}-${SUBACTION}"
 	exitcode=0
-	if [ -x $scriptfile ]; then
-		$scriptfile "$@"
+	if [ -x "$scriptfile" ]; then
+		"$scriptfile" "$@"
 		exitcode=$?
 
 		if [ $exitcode -gt 0 ]; then
@@ -736,8 +736,8 @@ run_post_hook() {
 	local scriptfile
 
 	scriptfile="${HOOKS_DIR}/post-flow-${SUBCOMMAND}-${SUBACTION}"
-	if [ -x $scriptfile ]; then
-		$scriptfile "$@"
+	if [ -x "$scriptfile" ]; then
+		"$scriptfile" "$@"
 	fi
 }
 
