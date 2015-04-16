@@ -76,8 +76,8 @@ startswith() { [ "$1" != "${1#$2}" ]; }
 endswith() { [ "$1" != "${1%$2}" ]; }
 
 # Convenience functions for checking shFlags flags
-flag() { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG -eq $FLAGS_TRUE ]; }
-noflag() { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG -qe $FLAGS_TRUE ]; }
+flag()   { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG == $FLAGS_TRUE ]; }
+noflag() { local FLAG; eval FLAG='$FLAGS_'$1; [ $FLAG != $FLAGS_TRUE ]; }
 
 # check_boolean
 # Check if given value can be interpreted as a boolean
