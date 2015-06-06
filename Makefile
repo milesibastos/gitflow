@@ -32,6 +32,7 @@ datarootdir=$(prefix)/share
 docdir=$(datarootdir)/doc/gitflow
 # files that need mode 755
 EXEC_FILES=git-flow
+EXEC_FILES=git-hub
 
 # files that need mode 644
 SCRIPT_FILES =git-flow-init
@@ -44,6 +45,8 @@ SCRIPT_FILES+=git-flow-log
 SCRIPT_FILES+=git-flow-config
 SCRIPT_FILES+=gitflow-common
 SCRIPT_FILES+=gitflow-shFlags
+SCRIPT_FILES+=git-hub-feature
+SCRIPT_FILES+=git-hub-init
 
 # Hook files
 HOOK_FILES=$(wildcard hooks/*)
